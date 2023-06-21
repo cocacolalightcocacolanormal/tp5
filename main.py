@@ -2,7 +2,8 @@
 Modèle de départ pour la programmation Arcade.
 Il suffit de modifier les méthodes nécessaires à votre jeu.
 """
-#import random
+#import randomodèle de départ pour la programmation Arcade.
+Il suffi
 
 import arcade
 #import arcade.gui
@@ -66,11 +67,28 @@ class MyGame(arcade.Window):
      # C'est ici que vous allez créer vos listes de sprites et vos sprites.
      # Prenez note que vous devriez attribuer une valeur à tous les attributs créés dans __init__
 
-     pass
+     """
+            Configurer les variables du jeu
+            Cette méthode est appelée chaque fois qu'une nouvelle partie commence
+            """
+
+     # self.player_score = 0
+     # self.computer_score = 0
+     # self.game_state = GameState.NOT_STARTED
 
 
+     self.player = arcade.Sprite("assets/faceBeard.png", SPRITE_SCALING_PLAYER)
+     self.player.center_x = 200
+     self.player.center_y = 225
+     self.computer = arcade.Sprite("assets/compy.png")
+     self.computer.center_x = 600
+     self.computer.center_y = 225
+     self.rock = arcade.Sprite("assets/srock.png", SPRITE_SCALING_OBJECTS)
+     self.paper = arcade.Sprite("assets/spaper.png", SPRITE_SCALING_OBJECTS)
+     self.scissors = arcade.Sprite("assets/scissors.png", SPRITE_SCALING_OBJECTS)
 
- def validate_victory(self):
+
+def validate_victory(self):
      """
      Utilisé pour déterminer qui obtient la victoire (ou s'il y a égalité)
      Rappel: après avoir validé la victoire, il faut changer l'état de jeu
@@ -149,19 +167,27 @@ class MyGame(arcade.Window):
      #si le joueur a choisi une attaque, générer une attaque de l'ordinateur et valider la victoire
      #changer l'état de jeu si nécessaire (GAME_OVER)
      pass
+def on_key_press(self, key, key_modifiers):
 
- def on_key_press(self, key, key_modifiers):
-     """
-     Cette méthode est invoquée à chaque fois que l'usager tape une touche
-     sur le clavier.
-     Paramètres:
-         - key: la touche enfoncée
-         - key_modifiers: est-ce que l'usager appuie sur "shift" ou "ctrl" ?
-
-     Pour connaître la liste des touches possibles:
-     http://arcade.academy/arcade.key.html
-     """
-     pass
+     if key == arcade.key.SPACE:
+         if self.game_state == GameState.NOT_STARTED:
+             self.game_state = GameState.ROUND_ACTIVE
+         elif self.game_state == GameState.ROUND_DONE:
+             self.game_state = GameState.ROUND_ACTIVE
+             self.player_attack_type = None
+             self.computer_attack_type = None
+             self.player_attacked = False
+             self.player_wins_round = False
+             self.ronde_nulle = False
+         elif self.game_state == GameState.GAME_OVER:
+             self.game_state = GameState.NOT_STARTED
+             self.player_attack_type = None
+             self.computer_attack_type = None
+             self.player_attacked = False
+             self.player_wins_round = False
+             self.ronde_nulle = False
+             self.player_score = 0
+             self.computer_score = 0
 
  def reset_round(self):
      """
@@ -187,7 +213,21 @@ class MyGame(arcade.Window):
 
      # Test de collision pour le type d'attaque (self.player_attack_type).
      # Rappel que si le joueur choisi une attaque, self.player_attack_chosen = True
-     pass
+     if self.game_state == GameState.NOT_STARTED:
+         self.game_state = GameState.ROUND_ACTIVE
+
+     if self.rock.collides_with_point((x, y)):
+         self.player_attack_type = AttackType.ROCK
+         self.player_attacked = True
+         self.rock = AttackAnimation(AttackType.ROCK)
+     elif self.paper.collides_with_point((x, y)):
+         self.player_attack_type = AttackType.PAPER
+         self.player_attacked = True
+         self.paper = AttackAnimation(AttackType.PAPER)
+     elif self.scissors.collides_with_point((x, y)):
+         self.player_attack_type = AttackType.SCISSORS
+         self.player_attacked = True
+         self.scissors = AttackAnimation(AttackType.SCISSORS)
 
 
 def main():
@@ -199,9 +239,5 @@ def main():
 
 if __name__ == "__main__":
    main()
-
-
-
-
 
 
